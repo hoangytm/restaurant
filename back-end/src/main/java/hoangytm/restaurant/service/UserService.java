@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
     private UserRoleRepo userRoleRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String email) {
+    public UserDetails loadUserByUsername(String username) {
 
         String ip = GetIP.getClientIP().replace(":", "").replace(" ", "");
         log.info("ip : " + ip);
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("this user was blocked");
         }
 
-        User user = userRepo.findUserByEmail(email);
+        User user = userRepo.findUserByUsername(username);
 
         if (user == null) {
             log.error("Invalid username or password.");
