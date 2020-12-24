@@ -32,11 +32,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private JavaMailSender javaMailSender;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private RoleRepo roleRepo;
-
 
     @GetMapping("/test")
     @ApiOperation(value = "test api", response = User.class)

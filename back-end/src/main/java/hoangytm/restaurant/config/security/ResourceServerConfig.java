@@ -34,17 +34,16 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.
                 anonymous().disable()
                 .authorizeRequests()
-                .antMatchers("/private/**","/user/activation/**").permitAll()
-                .antMatchers("**/register/**").permitAll()
+                .antMatchers("user/register").permitAll()
 //                .antMatchers("/private/**").access("hasRole('ADMIN')")
+                .antMatchers("**/fb/**", "/spring-security-rest/**", "**/swagger-ui.html").permitAll()
+                .anyRequest().authenticated();
 
-                .antMatchers("**/fb/**","/spring-security-rest/**","**/swagger-ui.html").permitAll();
 //                .and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
         http.exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(authenticationEntryPoint).and()
         ;
 
     }
-
 
 
 }
