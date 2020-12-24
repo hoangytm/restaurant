@@ -1,13 +1,10 @@
 package hoangytm.restaurant.config.security;
 
 import hoangytm.restaurant.exception.RestAccessDeniedHandler;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -75,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-@Bean
+    @Bean
     public FilterRegistrationBean corsFilter() {
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();

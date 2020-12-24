@@ -44,8 +44,4 @@ public class User {
     @Column(name = "IS_ACTIVE")
     private int active;
 
-    @Column(name = "IS_DELETE")
-    private Long isDelete;
-
-
 }

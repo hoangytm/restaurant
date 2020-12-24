@@ -40,8 +40,7 @@ public class UserService implements UserDetailsService {
     private UserRepo userRepo;
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private RoleRepo roleRepo;
     @Autowired
@@ -49,6 +48,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRoleRepo userRoleRepo;
+
+    @Autowired
+    private BCryptPasswordEncoder bcrypt;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -108,6 +110,7 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(User user) {
         if (CommonValidate.validateUser(user)) {
+            user.setPassword(bcrypt.encode(user.getPassword()));
             return userRepo.save(user);
         }
 
