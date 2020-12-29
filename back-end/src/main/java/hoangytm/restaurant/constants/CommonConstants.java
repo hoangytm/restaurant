@@ -11,4 +11,9 @@ public final class CommonConstants {
     public class RESPONSE_STATUS {
         public static final int SUCCESS = 200;
     }
+
+    public class DELETE {
+        public static final long DELETED = 1L;
+        public static final long NORMAL = 0L;
+    }
 }

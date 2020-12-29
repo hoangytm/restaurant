@@ -9,10 +9,13 @@ import hoangytm.restaurant.repo.UserRepo;
 import hoangytm.restaurant.repo.UserRoleRepo;
 import hoangytm.restaurant.utils.CommonValidate;
 import hoangytm.restaurant.utils.GetIP;
+import hoangytm.restaurant.utils.H;
+import hoangytm.restaurant.utils.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,8 +42,6 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
     private RoleRepo roleRepo;
@@ -91,12 +93,8 @@ public class UserService implements UserDetailsService {
     public void deleteUser() {
         userRepo.deleteUserByEmail("hoang2");
         System.out.println("SUCCESS");
-//        throw new RuntimeException();
     }
 
-    public User findUserByEmail(String email) {
-        return userRepo.findUserByEmail(email);
-    }
 
     public void updateUser(User user) {
         userRepo.save(user);
@@ -115,5 +113,25 @@ public class UserService implements UserDetailsService {
         }
 
         return null;
+    }
+
+    public List<User> findUser(User user) {
+        List<User> users = new ArrayList<>();
+        if (user != null) {
+            users = userRepo.findAll(buildFilterSpec(user));
+
+        }
+        return users;
+    }
+
+    private Specification<User> buildFilterSpec(User searchForm) {
+        return (root, criteriaQuery, cb) -> QueryUtils.and(cb,
+                H.isTrue(searchForm.getUsername()) ?
+                        QueryUtils.buildLikeFilter(root, cb, searchForm.getUsername(), "userName") : null,
+                H.isTrue(searchForm.getUsername()) ?
+                        QueryUtils.buildEqFilter(root, cb, "id", searchForm.getId()) : null,
+                H.isTrue(searchForm.getUsername()) ?
+                        QueryUtils.buildLikeFilter(root, cb, searchForm.getEmail(), "email") : null
+        );
     }
 }

@@ -2,6 +2,7 @@ package hoangytm.restaurant.repo;
 
 import hoangytm.restaurant.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,13 +10,11 @@ import org.springframework.stereotype.Repository;
  * 2/6/2020
  */
 @Repository
-public interface UserRepo extends JpaRepository<User, String> {
-    User findUserByEmail(String email);
+public interface UserRepo extends JpaRepository<User, String>, JpaSpecificationExecutor<User> {
 
     void deleteUserByEmail(String email);
 
     User findUserById(Long id);
-
 
     User findUserByUsername(String username);
 }
