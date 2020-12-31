@@ -7,10 +7,9 @@ import hoangytm.restaurant.entity.User;
 import hoangytm.restaurant.service.RoleService;
 import org.apache.catalina.UserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author PhanHoang
@@ -25,6 +24,22 @@ public class RoleController {
     private ApiResponse register(@RequestBody Role role) {
 
         Role result = roleService.createRole(role);
+        return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
+                .message("thanh cong")
+                .data(result)
+                .build();
+    }
+    @GetMapping("/findRole")
+    private ApiResponse findRole(Role role) {
+        List<Role> result = roleService.findRole(role);
+        return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
+                .message("thanh cong")
+                .data(result)
+                .build();
+    }
+    @PutMapping("/updateRole")
+    private ApiResponse updateRole(@RequestBody Role role) {
+        Role result = roleService.updateRole(role);
         return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
                 .message("thanh cong")
                 .data(result)

@@ -1,9 +1,12 @@
 package hoangytm.restaurant.service;
 
 import hoangytm.restaurant.config.security.lockUser.LoginAttemptService;
+import hoangytm.restaurant.dto.UserDto;
 import hoangytm.restaurant.entity.Role;
 import hoangytm.restaurant.entity.User;
 import hoangytm.restaurant.entity.UserRole;
+import hoangytm.restaurant.exception.BusinessException;
+import hoangytm.restaurant.i18n.Translator;
 import hoangytm.restaurant.repo.RoleRepo;
 import hoangytm.restaurant.repo.UserRepo;
 import hoangytm.restaurant.repo.UserRoleRepo;
@@ -14,7 +17,6 @@ import hoangytm.restaurant.utils.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,7 +44,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepo;
-
+    @Autowired
+    private Translator translator;
     @Autowired
     private RoleRepo roleRepo;
     @Autowired
@@ -101,7 +104,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User findUserById(Long id) {
+    public User findUserById(String id) {
         User user = userRepo.findUserById(id);
         return user;
     }
@@ -133,5 +136,28 @@ public class UserService implements UserDetailsService {
                 H.isTrue(searchForm.getUsername()) ?
                         QueryUtils.buildLikeFilter(root, cb, searchForm.getEmail(), "email") : null
         );
+    }
+
+    @Transactional
+    public UserDto grandRole(UserDto userDto) {
+        UserDto result = null;
+//        check user exist and active in db
+        User user = userRepo.findUserById(userDto.getUser().getId());
+        if (user == null) throw new BusinessException(translator.toLocale("label.user.notExist"));
+        else {
+//      delete the old roles
+            userRoleRepo.deleteAllByUserId(user.getId());
+//       save the new roles to the db
+            List<Role> roles = null;
+            if (userDto.getRoles() != null && userDto.getRoles().size() > 0) {
+                for (int i = 0; i < userDto.getRoles().size(); i++) {
+                    roles = roleRepo.saveAll(userDto.getRoles());
+                }
+            }
+            result.setRoles(roles);
+
+        }
+        result.setUser(user);
+        return result;
     }
 }

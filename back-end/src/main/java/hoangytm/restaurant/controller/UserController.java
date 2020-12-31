@@ -1,8 +1,10 @@
 package hoangytm.restaurant.controller;
 
 import hoangytm.restaurant.constants.CommonConstants;
+import hoangytm.restaurant.dto.UserDto;
 import hoangytm.restaurant.entity.ApiResponse;
 import hoangytm.restaurant.entity.User;
+import hoangytm.restaurant.exception.BusinessException;
 import hoangytm.restaurant.i18n.Translator;
 import hoangytm.restaurant.repo.RoleRepo;
 import hoangytm.restaurant.repo.UserRepo;
@@ -35,7 +37,7 @@ public class UserController {
     private JavaMailSender javaMailSender;
 
     @GetMapping("/activation/{id}")
-    public ApiResponse sendEmail(@PathVariable Long id) {
+    public ApiResponse sendEmail(@PathVariable String id) {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/activation/check/{id}")
-    public ApiResponse activeUser(@PathVariable Long id) {
+    public ApiResponse activeUser(@PathVariable String id) {
 
         User user = userService.findUserById(id);
         user.setActive(1);
@@ -59,7 +61,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ApiResponse register(@RequestBody User user) {
-        User result = userService.  registerUser(user);
+        User result = userService.registerUser(user);
         return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
                 .message("thanh cong")
                 .data(result)
@@ -68,18 +70,31 @@ public class UserController {
 
     @PutMapping("/update")
     public ApiResponse update(@RequestBody User user) {
-        User result = userService.  registerUser(user);
+        User result = userService.registerUser(user);
         return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
                 .message(translator.toLocale("label.success"))
                 .data(result)
                 .build();
     }
+
     @GetMapping("/findUser")
-    public ApiResponse findUser( User user) {
+    public ApiResponse findUser(User user) {
         List<User> result = userService.findUser(user);
         return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
                 .message(translator.toLocale("label.success"))
                 .data(result)
                 .build();
+    }
+
+    @PostMapping("/grandRole")
+    public ApiResponse grandRole(@RequestBody UserDto userDto) {
+        if (userDto.getUser() == null) throw new BusinessException(translator.toLocale("label.failed"));
+        else {
+            UserDto result = userService.grandRole(userDto);
+            return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
+                    .message(translator.toLocale("label.success"))
+                    .data(result)
+                    .build();
+        }
     }
 }
