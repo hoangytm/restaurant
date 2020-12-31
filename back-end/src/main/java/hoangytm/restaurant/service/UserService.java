@@ -105,8 +105,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findUserById(String id) {
-        User user = userRepo.findUserById(id);
-        return user;
+      return userRepo.findUserById(id);
     }
 
     public User registerUser(User user) {
@@ -139,7 +138,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDto grandRole(UserDto userDto) {
+    public UserDto grantRole(UserDto userDto) {
         UserDto result = null;
 //        check user exist and active in db
         User user = userRepo.findUserById(userDto.getUser().getId());
@@ -147,7 +146,7 @@ public class UserService implements UserDetailsService {
         else {
 //      delete the old roles
             userRoleRepo.deleteAllByUserId(user.getId());
-//       save the new roles to the db
+//      save the new roles to the db
             List<Role> roles = null;
             if (userDto.getRoles() != null && userDto.getRoles().size() > 0) {
                 for (int i = 0; i < userDto.getRoles().size(); i++) {

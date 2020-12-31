@@ -6,19 +6,12 @@ import hoangytm.restaurant.entity.ApiResponse;
 import hoangytm.restaurant.entity.User;
 import hoangytm.restaurant.exception.BusinessException;
 import hoangytm.restaurant.i18n.Translator;
-import hoangytm.restaurant.repo.RoleRepo;
-import hoangytm.restaurant.repo.UserRepo;
 import hoangytm.restaurant.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
-import javax.cache.annotation.CacheResult;
 import java.util.List;
 
 /**
@@ -86,11 +79,11 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/grandRole")
-    public ApiResponse grandRole(@RequestBody UserDto userDto) {
+    @PostMapping("/grantRole")
+    public ApiResponse grantRole(@RequestBody UserDto userDto) {
         if (userDto.getUser() == null) throw new BusinessException(translator.toLocale("label.failed"));
         else {
-            UserDto result = userService.grandRole(userDto);
+            UserDto result = userService.grantRole(userDto);
             return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
                     .message(translator.toLocale("label.success"))
                     .data(result)
