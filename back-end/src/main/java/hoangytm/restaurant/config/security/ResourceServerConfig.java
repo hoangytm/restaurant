@@ -34,8 +34,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.
                 anonymous().disable()
                 .authorizeRequests()
-                .antMatchers("user/register").permitAll()
-//                .antMatchers("/private/**").access("hasRole('ADMIN')")
+                .antMatchers("user/findUser/**").permitAll()
                 .antMatchers("**/fb/**", "/spring-security-rest/**", "**/swagger-ui.html").permitAll()
                 .anyRequest().authenticated();
 

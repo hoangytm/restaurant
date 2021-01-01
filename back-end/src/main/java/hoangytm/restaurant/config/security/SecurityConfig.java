@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,6 +29,7 @@ import org.springframework.web.filter.CorsFilter;
 @SuppressWarnings("ALL")
 @Configuration
 @EnableWebSecurity
+@Order(1)
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -56,13 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
         http
-                .csrf().disable();
-
-        http.authorizeRequests()
-                .antMatchers("**/swagger-ui.html/**","**/fb/**","/user/activation/**").permitAll()
-                .anyRequest().authenticated()
-                .and().exceptionHandling().accessDeniedHandler(restAccessDeniedHandler).authenticationEntryPoint(authenticationEntryPoint).and()
+                .authorizeRequests().antMatchers("/user/findUser").permitAll()
+                .and()
+                .authorizeRequests().anyRequest().authenticated();
         ;
 
     }
