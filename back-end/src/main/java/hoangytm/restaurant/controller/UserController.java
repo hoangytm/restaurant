@@ -79,6 +79,14 @@ public class UserController {
                 .data(result)
                 .build();
     }
+    @GetMapping("/findUserById/{userId}")
+    public ApiResponse findUserById(@PathVariable String userId) {
+        User result = userService.findUserById(userId);
+        return ApiResponse.builder().code(CommonConstants.RESPONSE_STATUS.SUCCESS)
+                .message(translator.toLocale("label.success"))
+                .data(result)
+                .build();
+    }
 
     @PostMapping("/grantRole")
     public ApiResponse grantRole(@RequestBody UserDto userDto) {
